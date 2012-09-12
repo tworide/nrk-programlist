@@ -28,11 +28,23 @@ class ProgramListParams:
         self.p_periode = p_periode
         self.channel = channel
 
-    def setFormat(p_format):
+    def setFormat(self, p_format):
         self.p_format = p_format
 
-    def setFomDag(fom_dag):
+    def setFomDag(self, fom_dag):
         self.p_fom_dag = fom_dag
+
+    def setFomMnd(self, p_fom_mnd):
+        self.p_fom_mnd = p_fom_mnd
+
+    def setFomAr(self, p_fom_ar):
+        self.p_fom_ar = p_fom_ar
+
+    def setPeriode(self, p_periode):
+        self.p_periode = p_periode
+        
+    def setPtype(self, p_type):
+        self.p_type = p_type
 
     def setChannel(self, channel):
         self.channel = channel
