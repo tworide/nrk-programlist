@@ -8,53 +8,57 @@ from bs4 import BeautifulSoup
 import urlutils
 import sys
 
-parser = argparse.ArgumentParser(description='List shows for spesific radio channel',
-                                 epilog='For info contact toij@ifi.uio.no',
-                                 prog='Channel Program Listing')
-parser.add_argument('-v','--version', action='version', version='%(prog)s 0.1')
-parser.add_argument('-c','--channel', required=True, 
-                    help='The name of the channel to list programs for',
-                    action='store')
-parser.add_argument('-d','--days-from-today', type=int, help='Specify # days from today for listing of that day', default=0)
-args = parser.parse_args()
-print "Channel:", args.channel
+if __name__ == '__main__':
 
-urlbuild = urlutils.UrlBuilder(query='p_format=HTML')
-plist = urlutils.ProgramListParams()
+    parser = argparse.ArgumentParser(description='List shows for spesific radio channel',
+                                     epilog='For info contact toij@ifi.uio.no',
+                                     prog='Channel Program Listing')
+    parser.add_argument('-v','--version', action='version', version='%(prog)s 0.1')
+    parser.add_argument('-c','--channel', required=True, 
+                        help='The name of the channel to list programs for',
+                        action='store')
+    parser.add_argument('-d','--days-from-today', type=int, help='Specify # days from today for listing of that day', default=0)
+    args = parser.parse_args()
+    print "Channel:", args.channel
 
-now = datetime.now()
-print args
-now = now + timedelta(days=args.days_from_today)
+    urlbuild = urlutils.UrlBuilder(query='p_format=HTML')
+    plist = urlutils.ProgramListParams()
 
-day = now.day
-month = now.month
-year = now.year
+    now = datetime.now()
+    print args
+    now = now + timedelta(days=args.days_from_today)
 
-print day, month, year
+    day = now.day
+    month = now.month
+    year = now.year
 
-plist.setChannel(args.channel)
-plist.setFomDag(day)
-plist.setFomMnd(month)
-plist.setFomAr(year)
+    print day, month, year
 
-urlbuild.setQuery(plist)
+    plist.setChannel(args.channel)
+    plist.setFomDag(day)
+    plist.setFomMnd(month)
+    plist.setFomAr(year)
 
-response = urllib2.urlopen(urlbuild.__str__())
-html = response.read()
+    urlbuild.setQuery(plist)
 
-soup = BeautifulSoup(html)
+    response = urllib2.urlopen(urlbuild.__str__())
+    html = response.read()
 
-print soup.title.get_text()
+    soup = BeautifulSoup(html)
 
-starttimes = soup.find_all("td", "pubkl")
-programs = soup.find_all("div", "pubprogtittel")
+    print soup.title.get_text()
 
-for starttime, program in zip(starttimes,programs):
-    timestamp = starttime.get_text()
-    hours = int(timestamp[:2])
-    minutes = int(timestamp[-3:])
-    hm = time(hours, minutes)
-    dpcomp = datetime.combine(now, hm)
+    starttimes = soup.find_all("td", "pubkl")
+    programs = soup.find_all("div", "pubprogtittel")
 
-    if now < dpcomp:
-        print starttime.get_text(), 'starts: ', program.get_text()
+    clock_now = datetime.now()
+
+    for starttime, program in zip(starttimes,programs):
+        timestamp = starttime.get_text()
+        hours = int(timestamp[:2])
+        minutes = int(timestamp[-3:])
+        hm = time(hours, minutes)
+        dpcomp = datetime.combine(now, hm)
+
+        if clock_now < dpcomp:
+            print starttime.get_text(), 'starts: ', program.get_text()
