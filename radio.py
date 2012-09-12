@@ -5,12 +5,25 @@ import time
 import urllib2
 from bs4 import BeautifulSoup
 import urlutils
+import sys
 
 #response = urllib2.urlopen('http://python.org/')
 
 urlbuild = urlutils.UrlBuilder(query='p_format=HTML')
 plist = urlutils.ProgramListParams()
-plist.setChannel("P1")
+print sys.argv[1]
+
+day = time.strftime("%d")
+month = time.strftime("%m")
+year = time.strftime("%Y")
+
+print day, month, year
+
+plist.setChannel(sys.argv[1])
+plist.setFomDag(day)
+plist.setFomMnd(month)
+plist.setFomAr(year)
+
 urlbuild.setQuery(plist)
 
 response = urllib2.urlopen(urlbuild.__str__())
