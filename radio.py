@@ -2,8 +2,7 @@
 
 import re
 import argparse
-import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 import urllib2
 from bs4 import BeautifulSoup
 import urlutils
@@ -50,7 +49,12 @@ print soup.title.get_text()
 starttimes = soup.find_all("td", "pubkl")
 programs = soup.find_all("div", "pubprogtittel")
 
-now = time.strftime("%H:%M")
-
 for starttime, program in zip(starttimes,programs):
-    print starttime.get_text(), 'starts: ', program.get_text()
+    timestamp = starttime.get_text()
+    hours = int(timestamp[:2])
+    minutes = int(timestamp[-3:])
+    hm = time(hours, minutes)
+    dpcomp = datetime.combine(now, hm)
+
+    if now < dpcomp:
+        print starttime.get_text(), 'starts: ', program.get_text()
