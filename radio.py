@@ -2,6 +2,7 @@
 
 import re
 import time
+from datetime import datetime, timedelta
 import urllib2
 from bs4 import BeautifulSoup
 import urlutils
@@ -9,13 +10,20 @@ import sys
 
 #response = urllib2.urlopen('http://python.org/')
 
+if len(sys.argv[1:]) < 1:
+    print "Too few arguments"
+    sys.exit(-1)
+
 urlbuild = urlutils.UrlBuilder(query='p_format=HTML')
 plist = urlutils.ProgramListParams()
 print sys.argv[1]
 
-day = time.strftime("%d")
-month = time.strftime("%m")
-year = time.strftime("%Y")
+now = datetime.now()
+now = now + timedelta(days=0)
+
+day = now.day
+month = now.month
+year = now.year
 
 print day, month, year
 
