@@ -2,6 +2,10 @@
 
 import urlparse
 import urllib
+import sys
+
+# List of supported channels
+supported_channels = ("P1","P2")
 
 class UrlBuilder:
     def __init__(self, scheme='http', netloc='www.nrk.no', path='/programoversikt/avansert/', params='', query='', url=''):
@@ -58,6 +62,17 @@ class ProgramListParams:
     def asQuery(self):
         return "p_artikkel_id=&p_format={p_format}&p_type={p_type}&p_fom_dag={p_fom_dag}&p_fom_mnd={p_fom_mnd}&p_fom_ar={p_fom_ar}&p_periode={p_periode}".format(p_format=self.p_format, p_type=self.p_type, p_fom_dag=self.p_fom_dag,p_fom_mnd=self.p_fom_mnd, p_fom_ar=self.p_fom_ar, p_periode=self.p_periode) + self.channelAsQueryParam()
 #return 'p_artikkel_id=&p_format=HTML&p_type=prog&p_fom_dag=11&p_fom_mnd=9&p_fom_ar=2012&p_periode=dennedagen&p_mpetre=MPETRE'
+
+def printListofSupportedChannels():
+    print "Supported channels:\nP1\nP2"
+
+def validateArgs(args):
+    if args.channel.upper() in supported_channels:
+        pass
+    else:
+        print args.channel + " is not a supported channel"
+        printListofSupportedChannels()
+        sys.exit(0)
 
 if __name__ == '__main__':
     urlbuild = UrlBuilder(query='p_format=HTML')

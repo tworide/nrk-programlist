@@ -19,13 +19,13 @@ if __name__ == '__main__':
                         action='store')
     parser.add_argument('-d','--days-from-today', type=int, help='Specify # days from today for listing of that day', default=0)
     args = parser.parse_args()
+    urlutils.validateArgs(args)
     print "Channel:", args.channel
 
     urlbuild = urlutils.UrlBuilder(query='p_format=HTML')
     plist = urlutils.ProgramListParams()
 
     now = datetime.now()
-    print args
     now = now + timedelta(days=args.days_from_today)
 
     day = now.day
@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
     print day, month, year
 
-    plist.setChannel(args.channel)
+    plist.setChannel(args.channel.upper())
     plist.setFomDag(day)
     plist.setFomMnd(month)
     plist.setFomAr(year)
